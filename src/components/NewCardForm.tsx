@@ -7,6 +7,13 @@ interface NewCardFormProps {
   listId: string;
 }
 
+/**
+ * NewCardForm Component
+ *
+ * This component renders a form to add a new card to a specified list.
+ * It captures the title and description of the card and dispatches
+ * an action to add the card to the Redux store.
+ */
 export const NewCardForm: React.FC<NewCardFormProps> = ({ listId }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -14,6 +21,10 @@ export const NewCardForm: React.FC<NewCardFormProps> = ({ listId }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Log form submission
+    console.log("Submitting new card:", { title, description });
+
     if (title) {
       dispatch(
         addCard({
@@ -23,8 +34,15 @@ export const NewCardForm: React.FC<NewCardFormProps> = ({ listId }) => {
           description,
         }),
       );
+
+      // Reset form fields
       setTitle("");
       setDescription("");
+
+      // Log successful card addition
+      console.log("Card added:", { title, description });
+    } else {
+      console.warn("Title is required to add a new card."); // Log warning if title is empty
     }
   };
 
