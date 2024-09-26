@@ -1,23 +1,35 @@
+import React from "react";
+
+// Define the props expected by the DeleteCardButton component
 interface DeleteCardButtonProps {
-  onClick: () => void;
+  onClick: () => void; // Function to be called when the button is clicked
 }
 
+/**
+ * DeleteCardButton Component
+ *
+ * This component renders a button that allows users to delete a card.
+ * The button is only visible when its parent card is hovered over.
+ */
 export const DeleteCardButton: React.FC<DeleteCardButtonProps> = ({
   onClick,
 }) => {
   return (
     <button
-      className="hidden group-hover/card:block"
-      onClick={onClick}
-      aria-label="Delete card"
+      className="hidden group-hover/card:block" // Show button only on hover
+      onClick={() => {
+        console.log("Delete button clicked"); // Log when the delete button is clicked
+        onClick(); // Execute the onClick prop function
+      }}
+      aria-label="Delete card" // Accessibility label for screen readers
     >
       <svg
-        className="h-[20px] w-[20px]"
+        className="h-[20px] w-[20px]" // Set SVG size
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth="1.5"
-        stroke="#00003c"
+        stroke="#00003c" // Set stroke color
       >
         <path
           strokeLinecap="round"
