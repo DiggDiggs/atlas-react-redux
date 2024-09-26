@@ -1,15 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import cardsReducer from "../src/components/slices/cardsSlice";
-import listsReducer from "../src/components/slices/listsSlice";
+import { configureStore } from "@reduxjs/toolkit";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import cardsReducer from "./slices/cardsSlice";
+import listsReducer from "./slices/listsSlice";
 import { persistReducer, persistStore } from "redux-persist";
-import storage from 'redux-persist/lib/storage';
-import { combineReducers } from 'redux';
+import storage from "redux-persist/lib/storage";
+import { combineReducers } from "redux";
 // import { useSensor } from '@dnd-kit/core';
 
-
 const persistConfig = {
-  key: 'root',
+  key: "root",
   storage,
 };
 

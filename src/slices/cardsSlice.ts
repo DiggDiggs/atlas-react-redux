@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, nanoid } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Card {
   id: string;
@@ -14,16 +14,28 @@ interface CardsSlice {
 
 const initialState: CardsSlice = {
   cards: {},
-}
+};
+
+// Custom ID generator function
+const generateUniqueId = () => {
+  return `card-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+};
 
 export const cardSlice = createSlice({
-  name: 'cards',
+  name: "cards",
   initialState,
   reducers: {
     addCard: (
-      state, action: PayloadAction<{ listId: string; title: string; text: string, description: string }>) => {
+      state,
+      action: PayloadAction<{
+        listId: string;
+        title: string;
+        text: string;
+        description: string;
+      }>,
+    ) => {
       const newCard = {
-        id: nanoid(),
+        id: generateUniqueId(), // Using the custom ID generator
         listId: action.payload.listId,
         title: action.payload.title,
         description: action.payload.description,
@@ -36,6 +48,7 @@ export const cardSlice = createSlice({
       const cardId = action.payload;
       delete state.cards[cardId];
     },
+
     clearBoard: (state) => {
       state.cards = {};
     },

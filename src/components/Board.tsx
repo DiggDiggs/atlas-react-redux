@@ -1,10 +1,15 @@
-import  { List } from "./List";
+import { List } from "../components/List";
 import { useState } from "react";
 import { useAppSelector, useAppDispatch } from "../store";
-import { deleteList, moveCard } from "./slices/listsSlice";
-import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { deleteList, moveCard } from "../slices/listsSlice";
+import {
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
-
 
 export const Board: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -16,11 +21,12 @@ export const Board: React.FC = () => {
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 5,
-      }
-    })
-  )
+      },
+    }),
+  );
 
   const handleDeleteList = (id: string) => {
+    console.log(`Deleting list with ID: ${id}`);
     dispatch(deleteList({ id }));
   };
 
@@ -28,21 +34,23 @@ export const Board: React.FC = () => {
     const { active, over } = event;
 
     if (!over || active.id === over.id) {
+      console.log("Drag ended without moving:", { active, over });
       return;
     }
 
-    const fromListId = active.data?.current?.listId ?? '';
-    const toListId = over.data?.current?.listId ?? '';
+    const fromListId = active.data?.current?.listId ?? "";
+    const toListId = over.data?.current?.listId ?? "";
 
-    if (fromListId && toListId && fromListId && toListId) {
+    if (fromListId && toListId) {
+      console.log(`Moving card ${active.id} from ${fromListId} to ${toListId}`);
       dispatch(
         moveCard({
           cardId: active.id.toString(),
           fromListId,
           toListId,
-        })
+        }),
       );
-    };
+    }
 
     setActiveId(null);
   };
@@ -57,7 +65,10 @@ export const Board: React.FC = () => {
               .map((cardId) => cards[cardId]);
 
             return (
-              <SortableContext key={list.id} items={filteredCards.map((card) => card.id)}>
+              <SortableContext
+                key={list.id}
+                items={filteredCards.map((card) => card.id)}
+              >
                 <List
                   id={list.id}
                   title={list.title}

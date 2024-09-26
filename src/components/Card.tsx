@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAppDispatch } from "../store";
-import { deleteCard } from "../components/slices/listsSlice";
+import { deleteCard } from "../slices/listsSlice";
 import { DeleteCardButton } from "./DeleteCardButton";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -12,15 +12,27 @@ interface CardProps {
   listId: string;
 }
 
-export const Card: React.FC<CardProps> = ({ id, title, description, listId }) => {
+export const Card: React.FC<CardProps> = ({
+  id,
+  title,
+  description,
+  listId,
+}) => {
   const dispatch = useAppDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
   const [editDescription, setEditDescription] = useState(description);
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
     id,
-    data: { listId }
+    data: { listId },
   });
 
   const style = {
@@ -30,15 +42,21 @@ export const Card: React.FC<CardProps> = ({ id, title, description, listId }) =>
   };
 
   const handleDelete = () => {
+    console.log(`Deleting card with ID: ${id}`);
     dispatch(deleteCard({ id }));
   };
 
   const handleEditToggle = () => {
+    console.log(isEditing ? "Canceling edit mode" : "Entering edit mode");
     setIsEditing(!isEditing);
   };
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(`Saving edits for card with ID: ${id}`, {
+      editTitle,
+      editDescription,
+    });
     setIsEditing(false);
   };
 
@@ -53,26 +71,35 @@ export const Card: React.FC<CardProps> = ({ id, title, description, listId }) =>
       {isEditing ? (
         <form onSubmit={handleSave} className="w-full">
           <input
-            className="w-full mb-2 resize-none border-0 bg-off-white-light text-xl font-black text-blue outline-none"
+            className="mb-2 w-full resize-none border-0 bg-off-white-light text-xl font-black text-blue outline-none"
             type="text"
             value={editTitle}
-            onChange={(e) => setEditTitle(e.target.value)}
+            onChange={(e) => {
+              setEditTitle(e.target.value);
+              console.log("Editing title:", e.target.value);
+            }}
             placeholder="Title"
           />
           <textarea
             className="w-full resize-none border-0 bg-off-white-light text-blue outline-none"
             value={editDescription}
-            onChange={(e) => setEditDescription(e.target.value)}
+            onChange={(e) => {
+              setEditDescription(e.target.value);
+              console.log("Editing description:", e.target.value);
+            }}
             placeholder="Description"
           />
-          <div className="flex justify-between mt-2">
-            <button type="submit" className="p-2 bg-green-500 text-white rounded">
+          <div className="mt-2 flex justify-between">
+            <button
+              type="submit"
+              className="rounded bg-green-500 p-2 text-white"
+            >
               Save
             </button>
             <button
               type="button"
               onClick={handleEditToggle}
-              className="p-2 bg-gray-500 text-white rounded"
+              className="rounded bg-gray-500 p-2 text-white"
             >
               Cancel
             </button>
