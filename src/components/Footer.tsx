@@ -2,23 +2,33 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addList, clearBoard } from "../slices/listsSlice";
 
+/**
+ * Footer Component
+ *
+ * This component renders a footer with a form to add a new list and a button to clear the board.
+ * It dispatches actions to add a list or clear the board using Redux.
+ */
 export default function Footer() {
-  const [title, setTitle] = useState("");
-  const dispatch = useDispatch();
+  const [title, setTitle] = useState(""); // State for the title input
+  const dispatch = useDispatch(); // Redux dispatch function
 
+  // Handle form submission to add a new list
   const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+    event.preventDefault(); // Prevent default form submission behavior
 
     if (title.trim()) {
-      dispatch(addList({ title }));
-      setTitle("");
+      console.log(`Adding new list with title: ${title}`); // Log the title of the new list
+      dispatch(addList({ title })); // Dispatch the addList action
+      setTitle(""); // Reset the title input
     } else {
-      alert("Whats you want to Name it?");
+      alert("What's you want to Name it?"); // Alert if the title is empty
     }
   };
 
+  // Handle clearing the board
   const handleClearBoard = () => {
-    dispatch(clearBoard());
+    console.log("Clearing the board"); // Log when the board is cleared
+    dispatch(clearBoard()); // Dispatch the clearBoard action
   };
 
   return (
@@ -27,7 +37,10 @@ export default function Footer() {
         <input
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            console.log("Updating title input:", e.target.value); // Log title input updates
+          }}
           placeholder="List title"
           name="Title"
           className="border-0 bg-transparent text-3xl font-semibold text-blue placeholder:text-blue placeholder:opacity-50 focus:outline-none"
