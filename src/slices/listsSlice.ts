@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, nanoid } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface List {
   title: string;
@@ -15,22 +15,24 @@ interface Card {
 interface ListsState {
   lists: List[];
   cards: Record<string, Card>;
+  nextCardId: number; // Add a nextCardId to keep track of IDs
 }
 
 const initialState: ListsState = {
   lists: [],
-  cards: {} as Record<string, Card>,
+  cards: {},
+  nextCardId: 0, // Initialize the nextCardId
 };
 
 export const listsSlice = createSlice({
   name: "lists",
   initialState,
   reducers: {
-    addList: (state, action: PayloadAction<{title: string}>) => {
+    addList: (state, action: PayloadAction<{ title: string }>) => {
       const newList = {
-        id: nanoid(),
+        id: `list-${state.lists.length}`, // Change this to however you want to generate list IDs
         title: action.payload.title,
-      }
+      };
       state.lists.push(newList);
     },
 
@@ -39,7 +41,7 @@ export const listsSlice = createSlice({
       state.lists = state.lists.filter((list) => list.id !== listId);
       Object.keys(state.cards).forEach((cardId) => {
         if (state.cards[cardId].listId === listId) {
-          delete state.cards[cardId]
+          delete state.cards[cardId];
         }
       });
     },
@@ -60,7 +62,11 @@ export const listsSlice = createSlice({
 
     moveCard: (
       state,
-      action: PayloadAction<{ cardId: string; fromListId: string; toListId: string }>
+      action: PayloadAction<{
+        cardId: string;
+        fromListId: string;
+        toListId: string;
+      }>,
     ) => {
       const { cardId, fromListId, toListId } = action.payload;
       const card = state.cards[cardId];
@@ -77,5 +83,12 @@ export const listsSlice = createSlice({
   },
 });
 
-export const { addList, deleteList, clearBoard, addCard, deleteCard, moveCard } = listsSlice.actions;
+export const {
+  addList,
+  deleteList,
+  clearBoard,
+  addCard,
+  deleteCard,
+  moveCard,
+} = listsSlice.actions;
 export default listsSlice.reducer;

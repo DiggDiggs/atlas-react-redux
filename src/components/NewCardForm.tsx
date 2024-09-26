@@ -1,19 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addCard } from "../slices/listsSlice";
-import { nanoid } from "@reduxjs/toolkit";
 
 interface NewCardFormProps {
   listId: string;
 }
 
-/**
- * NewCardForm Component
- *
- * This component renders a form to add a new card to a specified list.
- * It captures the title and description of the card and dispatches
- * an action to add the card to the Redux store.
- */
 export const NewCardForm: React.FC<NewCardFormProps> = ({ listId }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -22,27 +14,27 @@ export const NewCardForm: React.FC<NewCardFormProps> = ({ listId }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Log form submission
     console.log("Submitting new card:", { title, description });
 
     if (title) {
+      // Using a simple counter to generate an ID
+      const newCardId = `${listId}-card-${Date.now()}`; // Unique card ID based on timestamp
+
       dispatch(
         addCard({
-          id: nanoid(),
+          id: newCardId, // Assign the generated ID
           listId,
           title,
           description,
         }),
       );
 
-      // Reset form fields
       setTitle("");
       setDescription("");
 
-      // Log successful card addition
       console.log("Card added:", { title, description });
     } else {
-      console.warn("Title is required to add a new card."); // Log warning if title is empty
+      console.warn("Title is required to add a new card.");
     }
   };
 
